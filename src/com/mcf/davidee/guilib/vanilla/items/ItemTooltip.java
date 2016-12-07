@@ -55,7 +55,7 @@ public class ItemTooltip extends Widget {
 	public ItemTooltip(ItemStack stack, GuiScreen parent) {
 		super(0, 0);
 
-		if (stack.getItem() != null) {
+		if (!stack.isEmpty()) {
 			tooltips = (List<String>) stack.getTooltip(mc.player, mc.gameSettings.advancedItemTooltips);
 			if (!tooltips.isEmpty()) {
 				String name = tooltips.get(0);
