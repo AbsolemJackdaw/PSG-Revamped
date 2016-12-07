@@ -55,7 +55,7 @@ public class PaintingSelectionScreen extends BasicScreen implements ButtonHandle
 
 	public void updateScreen() {
 		super.updateScreen();
-		if (mc.thePlayer == null || !mc.thePlayer.isEntityAlive())
+		if (mc.player == null || !mc.player.isEntityAlive())
 			close();
 	}
 

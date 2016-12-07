@@ -235,12 +235,12 @@ public abstract class TextField extends FocusableWidget {
 	}
 
 	public void setCursorPosition(int index) {
-		cursorPosition = MathHelper.clamp_int(index, 0, text.length());
+		cursorPosition = MathHelper.clamp(index, 0, text.length());
 		setSelectionPos(this.cursorPosition);
 	}
 
 	public void setSelectionPos(int index) {
-		index = MathHelper.clamp_int(index, 0, text.length());
+		index = MathHelper.clamp(index, 0, text.length());
 		selectionEnd = index;
 
 		if (charOffset > index)
@@ -257,7 +257,7 @@ public abstract class TextField extends FocusableWidget {
 		else if (index <= charOffset)
 			charOffset = index;
 
-		charOffset = MathHelper.clamp_int(charOffset, 0, text.length());
+		charOffset = MathHelper.clamp(charOffset, 0, text.length());
 	}
 
 	public boolean keyTyped(char par1, int par2) {

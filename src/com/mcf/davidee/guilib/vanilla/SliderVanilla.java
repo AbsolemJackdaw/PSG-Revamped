@@ -37,7 +37,7 @@ public class SliderVanilla extends Slider {
 	public void draw(int mx, int my) {
 		if (dragging){
 			value = (float)(mx - (this.x + 4)) / (float)(this.width - 8);
-			value = MathHelper.clamp_float(value, 0, 1);
+			value = MathHelper.clamp(value, 0, 1);
 		}
 
 		mc.renderEngine.bindTexture(TEXTURE);

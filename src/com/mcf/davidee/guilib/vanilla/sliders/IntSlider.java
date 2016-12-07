@@ -49,12 +49,12 @@ public class IntSlider extends SliderVanilla {
 	}
 	
 	public static float getFloatValue(int val, int min, int max){
-		val = MathHelper.clamp_int(val, min, max);
+		val = MathHelper.clamp(val, min, max);
 		return (float)(val-min) / (max-min);
 	}
 	
 	public void setIntValue(int val) {
-		value = MathHelper.clamp_float(getFloatValue(val, minVal, maxVal), 0, 1);
+		value = MathHelper.clamp(getFloatValue(val, minVal, maxVal), 0, 1);
 	}
 	
 	public int getIntValue(){

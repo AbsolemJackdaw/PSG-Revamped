@@ -145,7 +145,7 @@ public abstract class BasicScreen extends GuiScreen {
 			int mx = Mouse.getEventX() * this.width / this.mc.displayWidth;
 			int my = this.height - Mouse.getEventY() * this.height / this.mc.displayHeight - 1;
 			boolean handled = false;
-			delta = MathHelper.clamp_int(delta, -5, 5);
+			delta = MathHelper.clamp(delta, -5, 5);
 			
 			for (Container c : containers) {
 				if (c.inBounds(mx, my)) {

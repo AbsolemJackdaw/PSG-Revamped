@@ -54,7 +54,7 @@ public class PacketPaintingClient implements IMessage{
 				}
 				else if (message.art.length == 1) { //Set Painting
 					EnumArt enumArt = getEnumArt(message.art[0]);
-					Entity e = PaintingSelectionMod.proxy.getClientPlayer().worldObj.getEntityByID(message.id);
+					Entity e = PaintingSelectionMod.proxy.getClientPlayer().world.getEntityByID(message.id);
 					if (e instanceof EntityPainting){
 						setPaintingArt((EntityPainting)e, enumArt);
 					}

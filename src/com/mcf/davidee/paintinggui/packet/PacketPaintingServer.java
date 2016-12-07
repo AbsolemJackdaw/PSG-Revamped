@@ -54,7 +54,7 @@ public class PacketPaintingServer implements IMessage{
 
 		@Override 
 		public IMessage onMessage(PacketPaintingServer message, MessageContext ctx) {
-			((WorldServer)ctx.getServerHandler().playerEntity.worldObj).addScheduledTask(() -> {
+			((WorldServer)ctx.getServerHandler().playerEntity.world).addScheduledTask(() -> {
 				handleServerSide(ctx.getServerHandler().playerEntity, message);
 			});
 			return null;
@@ -63,16 +63,16 @@ public class PacketPaintingServer implements IMessage{
 		private void handleServerSide(EntityPlayerMP player, PacketPaintingServer packet){
 			if (packet.art.length == 1) { //Set Painting
 				EnumArt enumArt = getEnumArt(packet.art[0]);
-				Entity e = player.worldObj.getEntityByID(packet.id);
+				Entity e = player.world.getEntityByID(packet.id);
 				if (e instanceof EntityPainting) {
 					setPaintingArt((EntityPainting)e, enumArt);
 					PaintingPacketHandler.NETWORK.sendToDimension(new PacketPaintingClient(packet.id, new String[]{enumArt.title}), e.dimension);
 				}
 				else
-					player.addChatMessage(new TextComponentString(PaintingSelectionMod.COLOR + "cError - Could not locate painting"));
+					player.sendMessage(new TextComponentString(PaintingSelectionMod.COLOR + "cError - Could not locate painting"));
 			}
 			else { //Send possible paintings
-				Entity e = player.worldObj.getEntityByID(packet.id);
+				Entity e = player.world.getEntityByID(packet.id);
 				if (e instanceof EntityPainting) {
 					EntityPainting painting = (EntityPainting)e;
 					EnumArt origArt = painting.art;
@@ -95,7 +95,7 @@ public class PacketPaintingServer implements IMessage{
 					setPaintingArt(painting, origArt);
 				}
 				else
-					player.addChatMessage(new TextComponentString(PaintingSelectionMod.COLOR + "cError - Could not locate painting"));
+					player.sendMessage(new TextComponentString(PaintingSelectionMod.COLOR + "cError - Could not locate painting"));
 			}
 		}
 

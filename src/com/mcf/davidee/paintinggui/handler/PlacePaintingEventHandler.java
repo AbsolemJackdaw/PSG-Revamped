@@ -47,11 +47,11 @@ public class PlacePaintingEventHandler {
 					event.getEntityPlayer().swingArm(EnumHand.MAIN_HAND);
 
 					if(!event.getEntityPlayer().isCreative())
-						stack.func_190917_f(-1);//grow
+						stack.shrink(1);//grow
 
 					if (!event.getWorld().isRemote){
 						painting.playPlaceSound();
-						event.getWorld().spawnEntityInWorld(painting);
+						event.getWorld().spawnEntity(painting);
 
 						EnumArt origArt = painting.art;
 						List<EnumArt> validArts = new ArrayList<EnumArt>();

@@ -15,7 +15,7 @@ public class ClientProxy extends NetProxy {
 
 	@Override
 	public EntityPlayer getClientPlayer() { 
-		return Minecraft.getMinecraft().thePlayer; 
+		return Minecraft.getMinecraft().player; 
 	}
 
 	@Override
@@ -38,7 +38,7 @@ public class ClientProxy extends NetProxy {
 		if (pos != null && pos.entityHit instanceof EntityPainting) 
 			PaintingPacketHandler.NETWORK.sendToServer(new PacketPaintingServer(pos.entityHit.getEntityId(), new String[0]));
 		else
-			PaintingSelectionMod.proxy.getClientPlayer().addChatMessage(new TextComponentString(PaintingSelectionMod.COLOR + "cError - No painting selected"));
+			PaintingSelectionMod.proxy.getClientPlayer().sendMessage(new TextComponentString(PaintingSelectionMod.COLOR + "cError - No painting selected"));
 	
 	}
 }

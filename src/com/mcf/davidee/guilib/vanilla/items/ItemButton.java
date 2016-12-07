@@ -14,13 +14,15 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.RenderItem;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 
 /**
  * 
- * This class is a Widget copy of a vanilla item button. 
- * This button supports "Air" - an itemstack without an item.
- * Note that the air representation is volatile - getItem() returns null, and calling toString() on the itemstack will crash.
+ * This class is a Widget copy of a vanilla item button. This button supports
+ * "Air" - an itemstack without an item. Note that the air representation is
+ * volatile - getItem() returns null, and calling toString() on the itemstack
+ * will crash.
  * 
  * Note that items use zLevel for rendering - change zLevel as needed.
  *
@@ -40,7 +42,7 @@ public class ItemButton extends Button implements Shiftable {
 
 	public ItemButton(ItemStack item, ButtonHandler handler) {
 		super(WIDTH, HEIGHT, handler);
-		
+
 		itemRenderer = mc.getRenderItem();
 
 		this.parent = mc.currentScreen;
@@ -50,7 +52,7 @@ public class ItemButton extends Button implements Shiftable {
 
 	protected void setItem(ItemStack item) {
 		this.item = item;
-		this.tooltip = Arrays.asList((Widget)new ItemTooltip(item, parent));
+		this.tooltip = Arrays.asList((Widget) new ItemTooltip(item, parent));
 	}
 
 	public ItemStack getItem() {
@@ -69,7 +71,9 @@ public class ItemButton extends Button implements Shiftable {
 			GL11.glEnable(GL11.GL_DEPTH_TEST);
 			tooltip.get(0).setPosition(mx, my);
 		}
-		if (item.getItem() != null) {
+		if (item.isEmpty())
+			drawString(mc.fontRendererObj, "Air", x + 3, y + 5, -1);
+		else {
 			RenderHelper.enableGUIStandardItemLighting();
 			OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240, 240);
 			GL11.glEnable(GL12.GL_RESCALE_NORMAL);
@@ -79,10 +83,7 @@ public class ItemButton extends Button implements Shiftable {
 			GL11.glDisable(GL12.GL_RESCALE_NORMAL);
 			RenderHelper.disableStandardItemLighting();
 		}
-		else //Air
-			drawString(mc.fontRendererObj, "Air" , x + 3, y + 5, -1);
 	}
-
 
 	@Override
 	public List<Widget> getTooltips() {

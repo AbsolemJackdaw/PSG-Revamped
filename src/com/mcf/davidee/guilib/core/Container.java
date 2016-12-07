@@ -192,7 +192,7 @@ public class Container {
 			if (focusList.size() == 0)
 				focusIndex = -1;
 			else {
-				focusIndex = MathHelper.clamp_int(focusIndex, 0, focusList.size() - 1);
+				focusIndex = MathHelper.clamp(focusIndex, 0, focusList.size() - 1);
 				focusList.get(focusIndex).focusGained();
 			}
 
@@ -289,7 +289,7 @@ public class Container {
 
 	protected void shift(int delta) {
 		if (focusIndex != -1)
-			shiftFocus(MathHelper.clamp_int(focusIndex + delta, 0, focusList.size() - 1));
+			shiftFocus(MathHelper.clamp(focusIndex + delta, 0, focusList.size() - 1));
 		else if (scrollbar != null && scrollbar.shouldRender(top, bottom))
 			scrollbar.shiftRelative(delta * -4);
 	}

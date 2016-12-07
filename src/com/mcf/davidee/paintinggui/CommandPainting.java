@@ -14,16 +14,6 @@ import net.minecraft.server.MinecraftServer;
 public class CommandPainting extends CommandBase {
 
 	@Override
-	public String getCommandName() {
-		return "painting";
-	}
-
-	@Override
-	public String getCommandUsage(ICommandSender sender) {
-		return "/painting";
-	}
-
-	@Override
 	public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
 		EntityPlayerMP player = (EntityPlayerMP)sender;
 		PaintingPacketHandler.NETWORK.sendTo(new PacketPaintingClient(-1, new String[0]), player);
@@ -32,5 +22,15 @@ public class CommandPainting extends CommandBase {
 	@Override
 	public boolean checkPermission(MinecraftServer server, ICommandSender sender) {
 		return sender instanceof EntityPlayer;
+	}
+
+	@Override
+	public String getName() {
+		return "painting";
+	}
+
+	@Override
+	public String getUsage(ICommandSender sender) {
+		return "/painting";
 	}
 }

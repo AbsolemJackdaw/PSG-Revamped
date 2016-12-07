@@ -56,7 +56,7 @@ public class ItemTooltip extends Widget {
 		super(0, 0);
 
 		if (stack.getItem() != null) {
-			tooltips = (List<String>) stack.getTooltip(mc.thePlayer, mc.gameSettings.advancedItemTooltips);
+			tooltips = (List<String>) stack.getTooltip(mc.player, mc.gameSettings.advancedItemTooltips);
 			if (!tooltips.isEmpty()) {
 				String name = tooltips.get(0);
 				if (name.startsWith("tile.null.name")) 

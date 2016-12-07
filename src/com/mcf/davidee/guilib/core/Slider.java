@@ -20,7 +20,7 @@ public abstract class Slider extends Widget {
 	public Slider(int width, int height, float value, SliderFormat format) {
 		super(width, height);
 
-		this.value = MathHelper.clamp_float(value, 0, 1);
+		this.value = MathHelper.clamp(value, 0, 1);
 		this.format = format;
 	}
 
@@ -28,7 +28,7 @@ public abstract class Slider extends Widget {
 	public boolean click(int mx, int my) {
 		if (inBounds(mx, my)) {
 			value = (float) (mx - (this.x + 4)) / (float) (this.width - 8);
-			value = MathHelper.clamp_float(value, 0, 1);
+			value = MathHelper.clamp(value, 0, 1);
 			dragging = true;
 			return true;
 		}
@@ -38,7 +38,7 @@ public abstract class Slider extends Widget {
 	@Override
 	public void handleClick(int mx, int my) {
 		value = (float) (mx - (this.x + 4)) / (float) (this.width - 8);
-		value = MathHelper.clamp_float(value, 0, 1);
+		value = MathHelper.clamp(value, 0, 1);
 		dragging = true;
 	}
 
