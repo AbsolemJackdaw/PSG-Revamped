@@ -67,11 +67,11 @@ public class ItemTooltip extends Widget {
 			}
 			
 			FontRenderer itemRenderer = stack.getItem().getFontRenderer(stack);
-			font = (itemRenderer == null) ? mc.fontRendererObj : itemRenderer;
+			font = (itemRenderer == null) ? mc.fontRenderer : itemRenderer;
 		}
 		else {
 			tooltips = Arrays.asList("Air");
-			font = mc.fontRendererObj;
+			font = mc.fontRenderer;
 		}
 		this.parent = parent;
 		this.width = getMaxStringWidth();

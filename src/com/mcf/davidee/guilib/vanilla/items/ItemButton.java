@@ -14,7 +14,6 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.RenderItem;
-import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 
 /**
@@ -72,13 +71,13 @@ public class ItemButton extends Button implements Shiftable {
 			tooltip.get(0).setPosition(mx, my);
 		}
 		if (item.isEmpty())
-			drawString(mc.fontRendererObj, "Air", x + 3, y + 5, -1);
+			drawString(mc.fontRenderer, "Air", x + 3, y + 5, -1);
 		else {
 			RenderHelper.enableGUIStandardItemLighting();
 			OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240, 240);
 			GL11.glEnable(GL12.GL_RESCALE_NORMAL);
 			itemRenderer.zLevel = this.zLevel;
-			itemRenderer.renderItemOverlays(mc.fontRendererObj, item, x + 1, y + 1);
+			itemRenderer.renderItemOverlays(mc.fontRenderer, item, x + 1, y + 1);
 			itemRenderer.zLevel = 0;
 			GL11.glDisable(GL12.GL_RESCALE_NORMAL);
 			RenderHelper.disableStandardItemLighting();

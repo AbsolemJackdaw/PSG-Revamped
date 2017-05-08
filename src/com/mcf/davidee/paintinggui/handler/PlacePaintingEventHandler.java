@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.apache.commons.lang3.Validate;
-
 import com.mcf.davidee.paintinggui.PaintingSelectionMod;
 import com.mcf.davidee.paintinggui.packet.PacketPaintingClient;
 import com.mcf.davidee.paintinggui.packet.PaintingPacketHandler;

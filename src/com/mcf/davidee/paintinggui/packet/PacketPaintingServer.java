@@ -54,8 +54,8 @@ public class PacketPaintingServer implements IMessage{
 
 		@Override 
 		public IMessage onMessage(PacketPaintingServer message, MessageContext ctx) {
-			((WorldServer)ctx.getServerHandler().playerEntity.world).addScheduledTask(() -> {
-				handleServerSide(ctx.getServerHandler().playerEntity, message);
+			((WorldServer)ctx.getServerHandler().player.world).addScheduledTask(() -> {
+				handleServerSide(ctx.getServerHandler().player, message);
 			});
 			return null;
 		}

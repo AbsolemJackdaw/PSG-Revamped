@@ -44,7 +44,7 @@ public class ButtonVanilla extends Button {
 			drawTexturedModalRect(x, y+height/2, u, v+20-height/2, width/2, height/2);
 			drawTexturedModalRect(x+width/2, y+height/2, u + 200-width/2, v+20-height/2, width/2, height/2);
 		}
-		drawCenteredString(mc.fontRendererObj, str, x + width / 2, y + (height - 8) / 2, getTextColor(hover));
+		drawCenteredString(mc.fontRenderer, str, x + width / 2, y + (height - 8) / 2, getTextColor(hover));
 	}
 
 	private int getStateOffset(boolean hover) {

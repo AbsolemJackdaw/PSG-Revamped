@@ -10,7 +10,7 @@ public class Tooltip extends Widget {
 	private String str;
 
 	public Tooltip(String text) {
-		super(Minecraft.getMinecraft().fontRendererObj.getStringWidth(text) + 4, 12);
+		super(Minecraft.getMinecraft().fontRenderer.getStringWidth(text) + 4, 12);
 
 		this.zLevel = 1.0f;
 		this.str = text;
@@ -19,7 +19,7 @@ public class Tooltip extends Widget {
 	}
 
 	public Tooltip(String text, int color, int txtColor) {
-		super(Minecraft.getMinecraft().fontRendererObj.getStringWidth(text) + 4, 12);
+		super(Minecraft.getMinecraft().fontRenderer.getStringWidth(text) + 4, 12);
 
 		this.zLevel = 1.0f;
 		this.str = text;
@@ -38,7 +38,7 @@ public class Tooltip extends Widget {
 	@Override
 	public void draw(int mx, int my) {
 		drawRect(x, y, x + width, y + height, color);
-		drawCenteredString(mc.fontRendererObj, str, x + width / 2, y + (height - 8) / 2, txtColor);
+		drawCenteredString(mc.fontRenderer, str, x + width / 2, y + (height - 8) / 2, txtColor);
 	}
 
 	@Override

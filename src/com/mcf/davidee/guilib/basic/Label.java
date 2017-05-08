@@ -81,9 +81,9 @@ public class Label extends Widget {
 		hover = newHover;
 		
 		if (shadow)
-			mc.fontRendererObj.drawStringWithShadow(str, x, y + 2, (hover) ? hoverColor : color);
+			mc.fontRenderer.drawStringWithShadow(str, x, y + 2, (hover) ? hoverColor : color);
 		else
-			mc.fontRendererObj.drawString(str, x, y + 2, (hover) ? hoverColor : color);
+			mc.fontRenderer.drawString(str, x, y + 2, (hover) ? hoverColor : color);
 	}
 
 	@Override
@@ -97,7 +97,7 @@ public class Label extends Widget {
 	}
 
 	private static int getStringWidth(String text) {
-		return Minecraft.getMinecraft().fontRendererObj.getStringWidth(text);
+		return Minecraft.getMinecraft().fontRenderer.getStringWidth(text);
 	}
 
 	@Override

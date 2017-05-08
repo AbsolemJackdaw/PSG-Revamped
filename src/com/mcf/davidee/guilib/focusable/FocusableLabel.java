@@ -101,7 +101,7 @@ public class FocusableLabel extends FocusableWidget implements Shiftable {
 		hover = newHover;
 		if (focused)
 			drawRect(x, y, x+width, y+height, 0x99999999);
-		mc.fontRendererObj.drawStringWithShadow(str, x, y + 2, (focused) ? focusColor : (hover) ? hoverColor : color);
+		mc.fontRenderer.drawStringWithShadow(str, x, y + 2, (focused) ? focusColor : (hover) ? hoverColor : color);
 	}
 	
 	@Override
@@ -115,7 +115,7 @@ public class FocusableLabel extends FocusableWidget implements Shiftable {
 	}
 	
 	private static int getStringWidth(String text) {
-		return Minecraft.getMinecraft().fontRendererObj.getStringWidth(text);
+		return Minecraft.getMinecraft().fontRenderer.getStringWidth(text);
 	}
 	
 	@Override
