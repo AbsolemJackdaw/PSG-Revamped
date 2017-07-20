@@ -1,14 +1,14 @@
 [
 {
-  "modid": "examplemod",
-  "name": "Example Mod",
-  "description": "Example placeholder mod.",
+  "modid": "paintingselgui",
+  "name": "PaintingSelectionGui",
+  "description": "Select your paintings via a GUI",
   "version": "${version}",
   "mcversion": "${mcversion}",
-  "url": "",
-  "updateUrl": "",
-  "authorList": ["ExampleDude"],
-  "credits": "The Forge and FML guys, for making this example",
+  "url": "https://minecraft.curseforge.com/projects/painting-selection-gui-revamped",
+  "updateUrl": "https://minecraft.curseforge.com/projects/painting-selection-gui-revamped/files",
+  "authorList": ["Davidee, Subaraki"],
+  "credits": "Thanks to Mojang, Forge, and all your support.",
   "logoFile": "",
   "screenshots": [],
   "dependencies": []
