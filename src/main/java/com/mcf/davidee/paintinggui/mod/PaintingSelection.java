@@ -1,7 +1,5 @@
 package com.mcf.davidee.paintinggui.mod;
 
-import java.util.Arrays;
-
 import com.mcf.davidee.paintinggui.command.CommandPainting;
 import com.mcf.davidee.paintinggui.gui.ArtComparator;
 import com.mcf.davidee.paintinggui.handler.PlacePaintingEventHandler;
@@ -10,10 +8,7 @@ import com.mcf.davidee.paintinggui.proxy.ServerProxy;
 
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
-import net.minecraftforge.fml.common.ModMetadata;
 import net.minecraftforge.fml.common.SidedProxy;
-import net.minecraftforge.fml.common.event.FMLInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 

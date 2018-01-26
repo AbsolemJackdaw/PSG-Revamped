@@ -3,8 +3,8 @@ package com.mcf.davidee.paintinggui.proxy;
 import com.mcf.davidee.paintinggui.gui.PaintingSelectionScreen;
 import com.mcf.davidee.paintinggui.mod.PaintingSelection;
 import com.mcf.davidee.paintinggui.packet.CPacketPainting;
-import com.mcf.davidee.paintinggui.packet.SPacketPainting;
 import com.mcf.davidee.paintinggui.packet.NetworkHandler;
+import com.mcf.davidee.paintinggui.packet.SPacketPainting;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.item.EntityPainting;

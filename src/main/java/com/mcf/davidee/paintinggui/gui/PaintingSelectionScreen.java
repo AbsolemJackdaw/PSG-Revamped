@@ -12,8 +12,8 @@ import com.mcf.davidee.guilib.core.Container;
 import com.mcf.davidee.guilib.core.Scrollbar;
 import com.mcf.davidee.guilib.vanilla.ButtonVanilla;
 import com.mcf.davidee.guilib.vanilla.ScrollbarVanilla;
-import com.mcf.davidee.paintinggui.packet.SPacketPainting;
 import com.mcf.davidee.paintinggui.packet.NetworkHandler;
+import com.mcf.davidee.paintinggui.packet.SPacketPainting;
 
 import net.minecraft.entity.item.EntityPainting.EnumArt;
 
