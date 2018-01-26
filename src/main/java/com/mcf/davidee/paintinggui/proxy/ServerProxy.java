@@ -1,17 +1,17 @@
-package com.mcf.davidee.paintinggui;
+package com.mcf.davidee.paintinggui.proxy;
 
-import com.mcf.davidee.paintinggui.packet.PacketPaintingClient;
+import com.mcf.davidee.paintinggui.packet.CPacketPainting;
 
 import net.minecraft.entity.item.EntityPainting;
 import net.minecraft.entity.player.EntityPlayer;
 
-public class NetProxy {
+public class ServerProxy {
 	
 	public EntityPlayer getClientPlayer() { 
 		return null; 
 	}
 	
-	public void displayPaintingSelectionScreen(PacketPaintingClient message){};
+	public void displayPaintingSelectionScreen(CPacketPainting message){};
 	public void displayPaintingSelectionScreen(EntityPainting painting){};
 
 	public void processRayTracing(){};

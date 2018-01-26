@@ -1,7 +1,7 @@
-package com.mcf.davidee.paintinggui;
+package com.mcf.davidee.paintinggui.command;
 
-import com.mcf.davidee.paintinggui.packet.PacketPaintingClient;
-import com.mcf.davidee.paintinggui.packet.PaintingPacketHandler;
+import com.mcf.davidee.paintinggui.packet.CPacketPainting;
+import com.mcf.davidee.paintinggui.packet.NetworkHandler;
 
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
@@ -16,7 +16,7 @@ public class CommandPainting extends CommandBase {
 	@Override
 	public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
 		EntityPlayerMP player = (EntityPlayerMP)sender;
-		PaintingPacketHandler.NETWORK.sendTo(new PacketPaintingClient(-1, new String[0]), player);
+		NetworkHandler.NETWORK.sendTo(new CPacketPainting(-1, new String[0]), player);
 	}
 
 	@Override

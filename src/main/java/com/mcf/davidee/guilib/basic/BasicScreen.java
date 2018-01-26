@@ -119,14 +119,6 @@ public abstract class BasicScreen extends GuiScreen {
 				c.mouseReleased(mouseX, mouseY);
 		}
 	}
-	
-//	@Override
-//	protected void mouseMovedOrUp(int mx, int my, int code) {
-//		if (code == 0){
-//			for (Container c : containers)
-//				c.mouseReleased(mx, my);
-//		}
-//	}
 
 	/**
 	 * See {@link GuiScreen#handleMouseInput} for more information about mx and my.

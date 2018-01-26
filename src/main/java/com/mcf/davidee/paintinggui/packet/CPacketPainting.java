@@ -1,6 +1,6 @@
 package com.mcf.davidee.paintinggui.packet;
 
-import com.mcf.davidee.paintinggui.PaintingSelectionMod;
+import com.mcf.davidee.paintinggui.mod.PaintingSelection;
 
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
@@ -13,15 +13,15 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
-public class PacketPaintingClient implements IMessage{
+public class CPacketPainting implements IMessage{
 
 	// A default constructor is always required
-	public PacketPaintingClient(){}
+	public CPacketPainting(){}
 
 	public int id;
 	public String[] art;
 
-	public PacketPaintingClient(int toSend, String[] data) {
+	public CPacketPainting(int toSend, String[] data) {
 		this.id = toSend;
 		art = data;
 	}
@@ -44,23 +44,23 @@ public class PacketPaintingClient implements IMessage{
 		art = s;
 	}
 
-	public static class PaintingMessageHandlerClient implements IMessageHandler<PacketPaintingClient, IMessage> {
+	public static class CPaintingMessageHandler implements IMessageHandler<CPacketPainting, IMessage> {
 		@Override 
-		public IMessage onMessage(PacketPaintingClient message, MessageContext ctx) {
+		public IMessage onMessage(CPacketPainting message, MessageContext ctx) {
 
 			Minecraft.getMinecraft().addScheduledTask( () -> {
 				if(message.id == -1) { //What painting is selected?
-					PaintingSelectionMod.proxy.processRayTracing();
+					PaintingSelection.proxy.processRayTracing();
 				}
 				else if (message.art.length == 1) { //Set Painting
 					EnumArt enumArt = getEnumArt(message.art[0]);
-					Entity e = PaintingSelectionMod.proxy.getClientPlayer().world.getEntityByID(message.id);
+					Entity e = PaintingSelection.proxy.getClientPlayer().world.getEntityByID(message.id);
 					if (e instanceof EntityPainting){
 						setPaintingArt((EntityPainting)e, enumArt);
 					}
 				}
 				else { //Show art GUI
-					PaintingSelectionMod.proxy.displayPaintingSelectionScreen(message);
+					PaintingSelection.proxy.displayPaintingSelectionScreen(message);
 				}
 			});
 
@@ -75,14 +75,13 @@ public class PacketPaintingClient implements IMessage{
 		}
 
 		protected void setPaintingArt(EntityPainting p, EnumArt art) {
-			//			p.art = art;
-			//force a boundingbox update by reading the data of the entity
+			//forcing a boundingbox update by reading the data of the entity :
+
 			NBTTagCompound tag = new NBTTagCompound();
 			p.writeEntityToNBT(tag);
-			tag.setString("Motive", art.title); //change art here, so it won't look like the painting moved
+			//change art here, so it won't look like the painting moved
+			tag.setString("Motive", art.title); 
 			p.readEntityFromNBT(tag);
 		}
 	}
-
-
 }

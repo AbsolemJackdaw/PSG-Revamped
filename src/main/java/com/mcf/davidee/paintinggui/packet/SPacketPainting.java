@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import com.mcf.davidee.paintinggui.PaintingSelectionMod;
+import com.mcf.davidee.paintinggui.mod.PaintingSelection;
 
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.Entity;
@@ -19,15 +19,15 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
-public class PacketPaintingServer implements IMessage{
+public class SPacketPainting implements IMessage{
 
 	// A default constructor is always required
-	public PacketPaintingServer(){}
+	public SPacketPainting(){}
 
 	public int id;
 	public String[] art;
 
-	public PacketPaintingServer(int toSend, String[] data) {
+	public SPacketPainting(int toSend, String[] data) {
 		this.id = toSend;
 		art = data;
 	}
@@ -50,26 +50,26 @@ public class PacketPaintingServer implements IMessage{
 		art = s;
 	}
 
-	public static class PaintingMessageHandlerServer implements IMessageHandler<PacketPaintingServer, IMessage> {
+	public static class SPaintingMessageHandler implements IMessageHandler<SPacketPainting, IMessage> {
 
 		@Override 
-		public IMessage onMessage(PacketPaintingServer message, MessageContext ctx) {
+		public IMessage onMessage(SPacketPainting message, MessageContext ctx) {
 			((WorldServer)ctx.getServerHandler().player.world).addScheduledTask(() -> {
 				handleServerSide(ctx.getServerHandler().player, message);
 			});
 			return null;
 		}
 
-		private void handleServerSide(EntityPlayerMP player, PacketPaintingServer packet){
+		private void handleServerSide(EntityPlayerMP player, SPacketPainting packet){
 			if (packet.art.length == 1) { //Set Painting
 				EnumArt enumArt = getEnumArt(packet.art[0]);
 				Entity e = player.world.getEntityByID(packet.id);
 				if (e instanceof EntityPainting) {
 					setPaintingArt((EntityPainting)e, enumArt);
-					PaintingPacketHandler.NETWORK.sendToDimension(new PacketPaintingClient(packet.id, new String[]{enumArt.title}), e.dimension);
+					NetworkHandler.NETWORK.sendToDimension(new CPacketPainting(packet.id, new String[]{enumArt.title}), e.dimension);
 				}
 				else
-					player.sendMessage(new TextComponentString(PaintingSelectionMod.COLOR + "cError - Could not locate painting"));
+					player.sendMessage(new TextComponentString(PaintingSelection.COLOR + "Error - Could not locate painting"));
 			}
 			else { //Send possible paintings
 				Entity e = player.world.getEntityByID(packet.id);
@@ -84,18 +84,18 @@ public class PacketPaintingServer implements IMessage{
 							validArts.add(art);
 					}
 					EnumArt[] validArtsArray = validArts.toArray(new EnumArt[0]);
-					Arrays.sort(validArtsArray, PaintingSelectionMod.ART_COMPARATOR);
+					Arrays.sort(validArtsArray, PaintingSelection.ART_COMPARATOR);
 					String[] names = new String[validArtsArray.length];
 					for (int i =0; i < validArtsArray.length; ++i)
 						names[i] = validArtsArray[i].title;
 
-					PaintingPacketHandler.NETWORK.sendTo(new PacketPaintingClient(packet.id, names), player);
+					NetworkHandler.NETWORK.sendTo(new CPacketPainting(packet.id, names), player);
 
 					//Reset the art
 					setPaintingArt(painting, origArt);
 				}
 				else
-					player.sendMessage(new TextComponentString(PaintingSelectionMod.COLOR + "cError - Could not locate painting"));
+					player.sendMessage(new TextComponentString(PaintingSelection.COLOR + "cError - Could not locate painting"));
 			}
 		}
 

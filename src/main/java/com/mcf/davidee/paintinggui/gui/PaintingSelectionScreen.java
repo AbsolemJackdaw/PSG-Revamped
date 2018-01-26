@@ -12,8 +12,8 @@ import com.mcf.davidee.guilib.core.Container;
 import com.mcf.davidee.guilib.core.Scrollbar;
 import com.mcf.davidee.guilib.vanilla.ButtonVanilla;
 import com.mcf.davidee.guilib.vanilla.ScrollbarVanilla;
-import com.mcf.davidee.paintinggui.packet.PacketPaintingServer;
-import com.mcf.davidee.paintinggui.packet.PaintingPacketHandler;
+import com.mcf.davidee.paintinggui.packet.SPacketPainting;
+import com.mcf.davidee.paintinggui.packet.NetworkHandler;
 
 import net.minecraft.entity.item.EntityPainting.EnumArt;
 
@@ -137,7 +137,7 @@ public class PaintingSelectionScreen extends BasicScreen implements ButtonHandle
 	@Override
 	public void buttonClicked(Button button) { 
 		String artTitle = ((PaintingButton)button).art.title;
-		PaintingPacketHandler.NETWORK.sendToServer(new PacketPaintingServer(paintingID, new String[] {artTitle}));
+		NetworkHandler.NETWORK.sendToServer(new SPacketPainting(paintingID, new String[] {artTitle}));
 		mc.displayGuiScreen(null);
 	}
 
