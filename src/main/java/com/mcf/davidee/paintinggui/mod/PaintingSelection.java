@@ -21,7 +21,7 @@ public class PaintingSelection {
 
 	public static final ArtComparator ART_COMPARATOR = new ArtComparator();
 
-	@SidedProxy(clientSide="com.mcf.davidee.paintinggui.ClientProxy", serverSide="com.mcf.davidee.paintinggui.NetProxy")
+	@SidedProxy(clientSide="com.mcf.davidee.paintinggui.proxy.ClientProxy", serverSide="com.mcf.davidee.paintinggui.proxy.ServerProxy")
 	public static ServerProxy proxy;
 
 	@EventHandler 
