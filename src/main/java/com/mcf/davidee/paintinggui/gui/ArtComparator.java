@@ -2,17 +2,18 @@ package com.mcf.davidee.paintinggui.gui;
 
 import java.util.Comparator;
 
-import net.minecraft.entity.item.EntityPainting.EnumArt;
+import com.mcf.davidee.paintinggui.wrapper.PaintingWrapper;
 
-public class ArtComparator implements Comparator<EnumArt> {
+
+public class ArtComparator implements Comparator<PaintingWrapper> {
 	
 	@Override
-	public int compare(EnumArt a, EnumArt b) {
-		if (a.sizeY > b.sizeY)
+	public int compare(PaintingWrapper a, PaintingWrapper b) {
+		if (a.getY() > b.getY())
 			return -1;
-		if (a.sizeY < b.sizeY)
+		if (a.getY() < b.getY())
 			return 1;
-		return b.sizeX - a.sizeX;
+		return b.getX() - a.getX();
 	}
 }
 

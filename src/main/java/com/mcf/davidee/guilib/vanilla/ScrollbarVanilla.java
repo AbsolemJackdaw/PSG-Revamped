@@ -32,5 +32,4 @@ public class ScrollbarVanilla extends Scrollbar {
 				((Shiftable) w).shiftY(dy);
 		}
 	}
-
 }

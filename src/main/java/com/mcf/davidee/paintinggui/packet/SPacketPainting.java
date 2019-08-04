@@ -5,19 +5,20 @@ import java.util.Arrays;
 import java.util.List;
 
 import com.mcf.davidee.paintinggui.mod.PaintingSelection;
+import com.mcf.davidee.paintinggui.wrapper.PaintingWrapper;
 
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.item.EntityPainting;
-import net.minecraft.entity.item.EntityPainting.EnumArt;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
+import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
+import subaraki.paintings.mod.entity.EntityNewPainting;
 
 public class SPacketPainting implements IMessage{
 
@@ -62,34 +63,36 @@ public class SPacketPainting implements IMessage{
 
 		private void handleServerSide(EntityPlayerMP player, SPacketPainting packet){
 			if (packet.art.length == 1) { //Set Painting
-				EnumArt enumArt = getEnumArt(packet.art[0]);
+				PaintingWrapper art = getPaintingWrapper(packet.art[0]);
 				Entity e = player.world.getEntityByID(packet.id);
-				if (e instanceof EntityPainting) {
-					setPaintingArt((EntityPainting)e, enumArt);
-					NetworkHandler.NETWORK.sendToDimension(new CPacketPainting(packet.id, new String[]{enumArt.title}), e.dimension);
+				if (e instanceof EntityNewPainting) {
+					EntityNewPainting painting = (EntityNewPainting)e;
+					setPaintingArt(painting, art);
+					NetworkHandler.NETWORK.sendToAllAround(new CPacketPainting(painting, new String[]{art.getTitle()}), 
+							new TargetPoint(player.world.provider.getDimension(), painting.posX, painting.posY, painting.posZ, 48));
 				}
 				else
 					player.sendMessage(new TextComponentString(PaintingSelection.COLOR + "Error - Could not locate painting"));
 			}
 			else { //Send possible paintings
 				Entity e = player.world.getEntityByID(packet.id);
-				if (e instanceof EntityPainting) {
-					EntityPainting painting = (EntityPainting)e;
-					EnumArt origArt = painting.art;
+				if (e instanceof EntityNewPainting) {
+					EntityNewPainting painting = (EntityNewPainting)e;
+					PaintingWrapper origArt = PaintingWrapper.PAINTINGS.get(painting.art);
 
-					List<EnumArt> validArts = new ArrayList<EnumArt>();
-					for(EnumArt art : EnumArt.values()){
+					List<PaintingWrapper> validArts = new ArrayList<PaintingWrapper>();
+					for(PaintingWrapper art : PaintingWrapper.PAINTINGS.values()){
 						setPaintingArt(painting, art);
 						if (painting.onValidSurface())
 							validArts.add(art);
 					}
-					EnumArt[] validArtsArray = validArts.toArray(new EnumArt[0]);
+					PaintingWrapper[] validArtsArray = validArts.toArray(new PaintingWrapper[0]);
 					Arrays.sort(validArtsArray, PaintingSelection.ART_COMPARATOR);
 					String[] names = new String[validArtsArray.length];
 					for (int i =0; i < validArtsArray.length; ++i)
-						names[i] = validArtsArray[i].title;
+						names[i] = validArtsArray[i].getTitle();
 
-					NetworkHandler.NETWORK.sendTo(new CPacketPainting(packet.id, names), player);
+					NetworkHandler.NETWORK.sendTo(new CPacketPainting(painting, names), player);
 
 					//Reset the art
 					setPaintingArt(painting, origArt);
@@ -99,19 +102,19 @@ public class SPacketPainting implements IMessage{
 			}
 		}
 
-		protected EnumArt getEnumArt(String artName) {
-			for (EnumArt art : EnumArt.values())
-				if (art.title.equals(artName))
-					return art;
-			return EnumArt.KEBAB;
+		protected PaintingWrapper getPaintingWrapper(String artName) {
+			if(PaintingWrapper.PAINTINGS.containsKey(artName))
+				return PaintingWrapper.PAINTINGS.get(artName);
+
+			return PaintingWrapper.DEFAULT;
 		}
 
-		protected void setPaintingArt(EntityPainting p, EnumArt art) {
+		protected void setPaintingArt(EntityNewPainting p, PaintingWrapper art) {
 
 			//force a boundingbox update by reading the data of the entity
 			NBTTagCompound tag = new NBTTagCompound();
 			p.writeEntityToNBT(tag);
-			tag.setString("Motive", art.title); //change art here, so it won't look like the painting moved
+			tag.setString("Motive", art.getTitle()); //change art here, so it won't look like the painting moved
 			p.readEntityFromNBT(tag);
 		}
 	}

@@ -14,8 +14,7 @@ import com.mcf.davidee.guilib.vanilla.ButtonVanilla;
 import com.mcf.davidee.guilib.vanilla.ScrollbarVanilla;
 import com.mcf.davidee.paintinggui.packet.NetworkHandler;
 import com.mcf.davidee.paintinggui.packet.SPacketPainting;
-
-import net.minecraft.entity.item.EntityPainting.EnumArt;
+import com.mcf.davidee.paintinggui.wrapper.PaintingWrapper;
 
 public class PaintingSelectionScreen extends BasicScreen implements ButtonHandler {
 
@@ -112,16 +111,14 @@ public class PaintingSelectionScreen extends BasicScreen implements ButtonHandle
 		title = new Label("Select a Painting");
 		back = new ButtonVanilla("Cancel", new CloseHandler());
 
-		EnumArt[] enumArts = EnumArt.values();
-		ArrayList<EnumArt> validArts = new ArrayList<EnumArt>();
+		ArrayList<PaintingWrapper> validArts = new ArrayList<PaintingWrapper>();
 		for (String s : art)
-			for (EnumArt enumArt : enumArts)
-				if (enumArt.title.equals(s)){
-					validArts.add(enumArt);
-					break;
-				}
+			if(PaintingWrapper.PAINTINGS.containsKey(s)) {
+				validArts.add(PaintingWrapper.PAINTINGS.get(s));
+				//break;
+			}
 
-		EnumArt[] validArtsArray = validArts.toArray(new EnumArt[0]);
+		PaintingWrapper[] validArtsArray = validArts.toArray(new PaintingWrapper[0]);
 		buttons = new PaintingButton[validArtsArray.length];
 		for (int i = 0; i < validArtsArray.length; ++i)
 			buttons[i] = new PaintingButton(validArtsArray[i], this);
@@ -136,7 +133,7 @@ public class PaintingSelectionScreen extends BasicScreen implements ButtonHandle
 
 	@Override
 	public void buttonClicked(Button button) { 
-		String artTitle = ((PaintingButton)button).art.title;
+		String artTitle = ((PaintingButton)button).art.getTitle();
 		NetworkHandler.NETWORK.sendToServer(new SPacketPainting(paintingID, new String[] {artTitle}));
 		mc.displayGuiScreen(null);
 	}

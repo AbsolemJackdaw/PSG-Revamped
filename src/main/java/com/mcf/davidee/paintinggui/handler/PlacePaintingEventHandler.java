@@ -7,9 +7,9 @@ import java.util.List;
 import com.mcf.davidee.paintinggui.mod.PaintingSelection;
 import com.mcf.davidee.paintinggui.packet.CPacketPainting;
 import com.mcf.davidee.paintinggui.packet.NetworkHandler;
+import com.mcf.davidee.paintinggui.wrapper.PaintingWrapper;
 
-import net.minecraft.entity.item.EntityPainting;
-import net.minecraft.entity.item.EntityPainting.EnumArt;
+import net.minecraft.entity.EntityHanging;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Items;
@@ -18,9 +18,14 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
+import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
+import subaraki.paintings.mod.entity.EntityNewPainting;
+import subaraki.paintings.mod.network.CPacketSyncPaintingData;
 
 public class PlacePaintingEventHandler {
 
@@ -28,73 +33,92 @@ public class PlacePaintingEventHandler {
 		MinecraftForge.EVENT_BUS.register(this);
 	}
 
-	@SubscribeEvent
+	@SubscribeEvent(priority = EventPriority.HIGHEST)
 	public void onPaintingPlaced(PlayerInteractEvent.RightClickBlock event){
 
 		ItemStack stack = event.getItemStack();
-		if(!stack.isEmpty())
-			if(stack.getItem().equals(Items.PAINTING)){
+		if(stack.getItem() == Items.PAINTING){
 
-				EntityPlayer player = event.getEntityPlayer();
-				EnumFacing face = event.getFace();
-				BlockPos blockpos = event.getPos().offset(face);
-				boolean flag = false;
+			EntityPlayer player = event.getEntityPlayer();
+			EnumFacing face = event.getFace();
+			BlockPos blockpos = event.getPos();
+			BlockPos actualPos = blockpos.offset(face);
 
-				for(EnumFacing facing : EnumFacing.HORIZONTALS)
-					if(face.equals(facing))
-						flag = true;
+			World world = event.getWorld();
 
-				if (flag && player.canPlayerEdit(blockpos, face, stack)){
+			boolean flag = false;
 
-					EntityPainting painting =  new EntityPainting(event.getWorld(), blockpos, face);
+			for(EnumFacing facing : EnumFacing.HORIZONTALS)
+				if(face.equals(facing))
+					flag = true;
 
-					if(painting.onValidSurface()){
-						event.getEntityPlayer().swingArm(EnumHand.MAIN_HAND); //recreate the animation of placing down an item
+			if (flag && player.canPlayerEdit(actualPos, face, stack)){
 
-						if(!event.getEntityPlayer().isCreative())
-							stack.shrink(1);
 
-						if (!event.getWorld().isRemote){
-							painting.playPlaceSound();
-							event.getWorld().spawnEntity(painting);
+				EntityNewPainting painting = new EntityNewPainting(world);
+				painting.facingDirection = face;
+				painting.rotationYaw = face.getHorizontalAngle();
+				painting.setPosition(actualPos.getX(), blockpos.getY(), actualPos.getZ());
+				painting.updateBB();
+				
+				if(painting.onValidSurface()){
+					event.getEntityPlayer().swingArm(EnumHand.MAIN_HAND); //recreate the animation of placing down an item
 
-							EnumArt originalArt = painting.art;
-							List<EnumArt> validArts = new ArrayList<EnumArt>(); //list of paintings placeable at current location
-							for(EnumArt art : EnumArt.values()){
-								painting.art = art;
+					if(!event.getEntityPlayer().isCreative())
+						stack.shrink(1);
 
-								//update the bounding box of the painting to make sure the simulation of placing down a painting
-								//happens correctly. Omiting this will result in overlapping paintings
-								updatePaintingBoundingBox(painting);
+					if (!event.getWorld().isRemote){
 
-								//simulate placing down a painting. if possible, add it to a list of paintings
-								//that are possible to place at this location
-								if (painting.onValidSurface())
-									validArts.add(art);
-							}
-							//reset the art of the painting to the one registered before
-							painting.art = originalArt;
-							updatePaintingBoundingBox(painting); // reset bounding box
+						EntityPlayerMP playerMP = (EntityPlayerMP)event.getEntityPlayer();
 
-							EnumArt[] validArtsArray = validArts.toArray(new EnumArt[0]);
-							//sort paintings from high to low, and from big to small
-							Arrays.sort(validArtsArray, PaintingSelection.ART_COMPARATOR);
-							
-							String[] names = new String[validArtsArray.length];
-							for (int i =0; i < validArtsArray.length; ++i)
-								names[i] = validArtsArray[i].title;
+						painting.playPlaceSound();
+						event.getWorld().spawnEntity(painting);
 
-							EntityPlayerMP playerMP = (EntityPlayerMP)event.getEntityPlayer();
-							NetworkHandler.NETWORK.sendTo(new CPacketPainting(painting.getEntityId(), names), playerMP);
+						//communicate the painting's facing to client
+						subaraki.paintings.mod.network.NetworkHandler.NETWORK.sendToAllAround(
+								new CPacketSyncPaintingData(painting), 
+								new TargetPoint(world.provider.getDimension(), blockpos.getX(),blockpos.getY(),blockpos.getZ(), 48));
+
+						PaintingWrapper originalArt = PaintingWrapper.PAINTINGS.get(painting.art);
+
+						List<PaintingWrapper> validArts = new ArrayList<PaintingWrapper>(); //list of paintings placeable at current location
+						for(PaintingWrapper art : PaintingWrapper.PAINTINGS.values()){
+							painting.art = art.getTitle();
+
+							//update the bounding box of the painting to make sure the simulation of placing down a painting
+							//happens correctly. Omiting this will result in overlapping paintings
+							updatePaintingBoundingBox(painting);
+
+							//simulate placing down a painting. if possible, add it to a list of paintings
+							//that are possible to place at this location
+							if (painting.onValidSurface())
+								validArts.add(art);
 						}
+						//reset the art of the painting to the one registered before
+						painting.art = originalArt.getTitle();
+
+						updatePaintingBoundingBox(painting); // reset bounding box
+
+						PaintingWrapper[] validArtsArray = validArts.toArray(new PaintingWrapper[0]);
+						//sort paintings from high to low, and from big to small
+						Arrays.sort(validArtsArray, PaintingSelection.ART_COMPARATOR);
+
+						String[] names = new String[validArtsArray.length];
+						for (int i =0; i < validArtsArray.length; ++i)
+							names[i] = validArtsArray[i].getTitle();
+
+
+						NetworkHandler.NETWORK.sendToAllAround(new CPacketPainting(painting, names), new TargetPoint(world.provider.getDimension(), blockpos.getX(),blockpos.getY(),blockpos.getZ(), 48));
 					}
-					event.setCanceled(true);
+
 				}
+				event.setCanceled(true);
 			}
+		}
 	}
 
 	//probably copied this from vanilla at some point ...
-	private void updatePaintingBoundingBox(EntityPainting painting) {
+	private void updatePaintingBoundingBox(EntityHanging painting) {
 		if (painting.facingDirection != null) {
 			double hangX = (double) painting.getHangingPosition().getX() + 0.5D;
 			double hangY = (double) painting.getHangingPosition().getY() + 0.5D;

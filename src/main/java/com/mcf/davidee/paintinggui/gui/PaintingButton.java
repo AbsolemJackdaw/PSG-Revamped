@@ -4,12 +4,12 @@ import org.lwjgl.opengl.GL11;
 
 import com.mcf.davidee.guilib.core.Button;
 import com.mcf.davidee.guilib.core.Scrollbar.Shiftable;
+import com.mcf.davidee.paintinggui.wrapper.PaintingWrapper;
 
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.entity.item.EntityPainting.EnumArt;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.util.ResourceLocation;
 
@@ -21,10 +21,10 @@ public class PaintingButton extends Button implements Shiftable {
 	private static final int BORDER = 3;
 	private static final int YELLOW = -256;
 
-	public final EnumArt art;
+	public final PaintingWrapper art;
 
-	public PaintingButton(EnumArt art, ButtonHandler handler) {
-		super(art.sizeX, art.sizeY, handler);
+	public PaintingButton(PaintingWrapper art, ButtonHandler handler) {
+		super(art.getX(), art.getY(), handler);
 
 		this.art = art;
 	}
@@ -34,7 +34,7 @@ public class PaintingButton extends Button implements Shiftable {
 	public void draw(int mx, int my) {
 		mc.renderEngine.bindTexture(TEXTURE);
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-		drawTexturedModalRect(x, y, art.offsetX, art.offsetY, width, height);
+		drawTexturedModalRect(x, y, art.getU(), art.getV(), width, height);
 
 		if (inBounds(mx, my)) { //Hover over, draw the 4 outlining rectangles
 			drawRect(x - BORDER, y - BORDER, x + width + BORDER, y, YELLOW); //upper left to upper right
